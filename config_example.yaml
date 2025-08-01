@@ -1,0 +1,4 @@
+repo: "git@github.com:your-org/infra-catalog.git"
+apps_path: "/home/username/terraform/apps"
+template_path: "/home/username/terraform/template"
+presets_path: "/home/username/launcher/presets"

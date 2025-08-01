@@ -1,186 +1,101 @@
-Absolutely! Here’s a **README.md** for your MVP Infrastructure Catalog launcher.
+Absolutely! Here’s an updated `README.md` for your Proxmox Infra Launcher, reflecting your latest improvements:
 
 ---
 
-# Infrastructure Catalog Launcher
+````markdown
+# Proxmox Infra Launcher
 
-A terminal UI (TUI) launcher for deploying, updating, and managing Proxmox (or any Terraform-based) server deployments, using a catalog of team-managed YAML presets and a base Terraform project template.
-
----
+A terminal-based Infrastructure Catalog and deployment launcher for Proxmox, written in Go using Bubble Tea and Lipgloss.
 
 ## Features
 
-* **Preset Catalog:** Pick from YAML “presets” for standardized deployment types (e.g., `elk`, `k8s-master`, `default`)—extend just by adding files!
-* **New Deployments:** Create a new infrastructure deployment from a preset and customize fields in a guided form.
-* **Update Existing Deployments:** Select and edit resource parameters for any existing deployment.
-* **Self-contained:** Only depends on Go, Terraform, and your repo—no external services or complex setup.
+- Modern, full-screen TUI with sticky footer, tooltips, and focus highlights
+- Multi-preset YAML-driven VM configurations (just add presets in the `presets/` directory)
+- Create and update deployments via forms with keyboard navigation (up/down, tab, F2/F3 for presets, left/right for select fields)
+- Dedicated tooltip box for field help, always visible in the UI
+- Real-time status indicators for Git and Vault (wiring pending)
+- Safe config handling (sample config provided, real config ignored by git)
+- Extensible: easily adapt fields via `fields.yaml` and add presets as you grow!
 
----
+## Quick Start
 
-## Prerequisites
+### 1. **Clone the repo**
+```sh
+git clone git@github.com:your-org/infra-catalog.git
+cd infra-catalog
+````
 
-* [Go 1.21+](https://go.dev/dl/) installed (`go version` to verify)
-* [Terraform](https://developer.hashicorp.com/terraform/tutorials/aws-get-started/install-cli) installed (`terraform version` to verify)
-* [git](https://git-scm.com/downloads) for managing your infrastructure repo
+### 2. **Install Go dependencies**
 
----
-
-## Getting Started
-
-### 1. Clone the Launcher Repository
-
-```bash
-git clone <your-launcher-repo-url>
-cd <launcher-root>
+```sh
+go mod tidy
 ```
 
-### 2. Prepare Your Directory Structure
+### 3. **Configure your environment**
 
-```text
-launcher-root/
-├── main.go
-├── config.yaml
-├── presets/              # For preset YAMLs (see below)
-│   ├── default.yaml
-│   ├── elk.yaml
-│   └── ...etc
-└── terraform/
-    ├── apps/             # Each deployment gets its own subfolder here
-    └── template/         # Your base Terraform project (main.tf, etc)
-```
+* **Copy the example config and edit it:**
 
-* `presets/`: Place one or more YAML files here (see **Presets** below)
-* `terraform/template/`: Must contain all required `.tf` files (e.g., `main.tf`, `variables.tf`, `providers.tf`)
-
----
-
-### 3. Configure `config.yaml`
-
-Example:
-
-```yaml
-repo: git@github.com:yourorg/infra.git
-apps_path: ./terraform/apps
-template_path: ./terraform/template
-presets_path: ./presets
-```
-
-Adjust the paths if your structure differs.
-
----
-
-### 4. Add Presets
-
-**`presets/default.yaml` (required):**
-
-```yaml
-vm_app: "myapp"
-platform_id: "01"
-vm_memory: "8192"
-vm_cpu_cores: "2"
-vm_disk_count: 1
-vm_disk_size: ["100G"]
-vm_count: 1
-zone: "standard"
-cluster: "cl10400"
-# Add any other custom fields as needed
-```
-
-Add more (e.g., `elk.yaml`, `k8s-master.yaml`) to empower quick and consistent launches!
-
----
-
-### 5. Build the Launcher
-
-```bash
-go build -o infra-launcher main.go
-```
-
----
-
-### 6. Run the Launcher
-
-```bash
-./infra-launcher
-```
-
-You’ll see a clean, navigable TUI:
-
-```
-╔══════════════════════════════════════════════════════════════════════╗
-║                    Infrastructure Catalog Launcher                 ║
-╠══════════════════════════════════════════════════════════════════════╣
-Welcome! [N] New │ [U] Update │ [Q] Quit
-╚══════════════════════════════════════════════════════════════════════╝
-```
-
----
-
-## Usage Overview
-
-### New Deployment
-
-* Press `N` to create a new deployment
-* Use `←/→` to choose a preset (fields auto-fill)
-* Tab through the form and customize any values
-* Press `[Enter]` to save (future: will auto-create a deployment folder)
-
-### Update Existing Deployment
-
-* Press `U` to open a table of existing deployments
-* Use `↑/↓` to select, `[Enter]` to edit
-* Tab/edit any field, `[Enter]` to save
-
-### Quit
-
-* Press `Q` or `Esc` to quit at any time
-
----
-
-## How It Works
-
-* **Presets**: YAML files in `presets/` define default values for your form. Switching presets reloads the form instantly.
-* **Template**: The Terraform project in `terraform/template/` is copied for every new deployment, so you get consistent infrastructure as code.
-* **Deployments**: Each new deployment is created in `terraform/apps/` as a separate folder.
-* **Edit**: You can edit resource counts, memory, CPU, and disks for existing deployments.
-
----
-
-## Extending The Catalog
-
-* **Add more YAML files to `presets/`**—the TUI will detect them automatically.
-* **Add/edit fields in the form** by updating `main.go` and your YAMLs.
-* **Team standards**: Update `default.yaml` to reflect best practices or requirements.
-
----
-
-## Troubleshooting
-
-* If you get an error on launch, check that all directories exist and are referenced correctly in `config.yaml`.
-* The launcher assumes `terraform/template/` contains a valid Terraform project (`terraform init` should work in it).
-* For Go errors, ensure dependencies (`github.com/charmbracelet/bubbletea`, `bubbles`, and `gopkg.in/yaml.v3`) are available:
-
-  ```bash
-  go get github.com/charmbracelet/bubbletea
-  go get github.com/charmbracelet/bubbles/textinput
-  go get github.com/charmbracelet/bubbles/table
-  go get gopkg.in/yaml.v3
+  ```sh
+  cp config_example.yaml config.yaml
+  # then edit config.yaml with your real paths/settings
   ```
+* **Presets**: Add your own presets (YAML files) in the `presets/` directory.
 
----
+### 4. **Run the launcher**
 
-## Roadmap
+```sh
+go run main.go
+```
 
-* [ ] One-click `terraform apply`/`destroy` from the UI
-* [ ] Git integration (status, commit, push, pull)
-* [ ] In-app logs and error reporting
-* [ ] Advanced preset features (inheritance, tags, search)
+## Configuration
 
----
+All user/site-specific settings live in `config.yaml`.
+The file is **gitignored** (not committed!)—edit `config_example.yaml` and copy to `config.yaml` before first run.
 
-## License
+### Example `config_example.yaml`:
 
-*Your license and contact information here*
+```yaml
+repo: "git@github.com:your-org/infra-catalog.git"
+apps_path: "/home/username/terraform/apps"
+template_path: "/home/username/terraform/template"
+presets_path: "/home/username/launcher/presets"
+```
 
----
+## Keyboard Shortcuts
 
+| Key         | Action                                       |
+| ----------- | -------------------------------------------- |
+| **N**       | Create new deployment                        |
+| **U**       | Update an existing deployment                |
+| **Q / Esc** | Quit launcher                                |
+| **↑/↓**     | Move between form fields                     |
+| **←/→**     | Cycle select/dropdown fields (zone, cluster) |
+| **Space**   | Cycle select/dropdown fields                 |
+| **F2/F3**   | Switch presets in Create view                |
+| **Tab**     | Move to next field                           |
+| **Enter**   | Save form / proceed                          |
+
+## Directory Structure
+
+```
+.
+├── main.go
+├── config_example.yaml   # <- commit this, not your real config.yaml
+├── .gitignore
+├── fields.yaml           # field metadata for form UI
+├── presets/              # put your YAML presets here
+├── apps/                 # auto-managed by launcher
+├── template/             # your Terraform template for new deployments
+└── ...
+```
+
+## FAQ
+
+**Q: Where do I set my Vault and Git status?**
+A: The UI will display real-time status indicators in the top-right (wiring coming soon—update `m.gitStatus` and `m.vaultStatus` in code).
+
+**Q: How do I add more VM types?**
+A: Just drop a new preset YAML in the `presets/` directory!
+
+**Q: How do I add a new field?**
+A: Add to `fields.yaml`, update your presets, and rebuild.
