@@ -1,0 +1,37 @@
+fields:
+  vm_app:
+    label: "Application Code"
+    help: "Application code for the VM (e.g., ELK, DB, APP)."
+  platform_description:
+    label: "Description"
+    help: "Describe the purpose of this deployment."
+  zone:
+    label: "Network Zone"
+    help: "Standard, Admin, or DMZ."
+  platform_id:
+    label: "Platform ID"
+    help: "Index for VM name (00-99)."
+  vm_network_suffix:
+    label: "Network Address Suffix"
+    help: "Last 3 digits of the IP address."
+  vm_id_prefix:
+    label: "VMID Prefix"
+    help: "Used for VM ID in Proxmox."
+  vm_memory:
+    label: "VM Memory Size"
+    help: "Amount of memory in MB (e.g., 8192)."
+  vm_cpu_cores:
+    label: "VM CPU Cores"
+    help: "Number of CPU cores."
+  vm_disk_size:
+    label: "VM Disk Sizes"
+    help: "Array of disk sizes (comma-separated), e.g., 100G,200G."
+  vm_disk_count:
+    label: "Number of Disks"
+    help: "How many disks per VM."
+  vm_count:
+    label: "Number of VMs"
+    help: "Number of identical VMs to create."
+  cluster:
+    label: "Cluster Name"
+    help: "Target cluster (e.g., cl10400)."
