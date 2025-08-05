@@ -1,6 +1,15 @@
 config.yaml
 presets
 
+# Terraform state & plan files (if launcher and terraform live together)
+terraform
+*.tfstate
+*.tfstate.backup
+*.tfplan
+.terraform/
+.terraform.lock.hcl
+crash.log
+
 # Binaries
 *.exe
 *.exe~

@@ -2,3 +2,8 @@ repo: "git@github.com:your-org/infra-catalog.git"
 apps_path: "/home/username/terraform/apps"
 template_path: "/home/username/terraform/template"
 presets_path: "/home/username/launcher/presets"
+# Optional for AWS profile configuration
+# If not set, the default profile will be used.
+# Uncomment and set the profile name if needed.
+# aws_profile: "your-aws-profile"
+# s3_bucket": "you-s3-bucket-name-for-terraform-state"
